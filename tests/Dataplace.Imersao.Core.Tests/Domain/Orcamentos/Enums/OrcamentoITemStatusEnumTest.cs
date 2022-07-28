@@ -15,7 +15,7 @@ namespace Dataplace.Imersao.Core.Tests.Domain.Orcamentos.Enums
             Assert.Equal("C", OrcamentoItemStatusEnum.Cancelado.ToDataValue());
         }
 
-        [Fact]
+        [Fact] 
         [Trait("OrcamentoItemStatusEnum", "ToOrcamentoItemStatusEnum")]
         public void OrcamentoItemAbertoToDataValueTest()
         {

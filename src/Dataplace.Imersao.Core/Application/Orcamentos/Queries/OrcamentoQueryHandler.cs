@@ -25,8 +25,6 @@ namespace Dataplace.Imersao.Core.Application.Orcamentos.Queries
         #endregion
         public async Task<OrcamentoViewModel> Handle(ObterOcamentoQuery query, CancellationToken cancellationToken)
         {
-     
-
             var sql = $@"
             SET TRANSACTION ISOLATION LEVEL SNAPSHOT;
             SELECT 
@@ -44,32 +42,33 @@ namespace Dataplace.Imersao.Core.Application.Orcamentos.Queries
 		        Orcamento.CdVendedor,
 		        Orcamento.Usuario,
 		        Orcamento.StOrcamento as Situacao
-	        FROM Orcamento
-            /**where**/	
+	        FROM Orcamento          
             ";
             var builder = new SqlBuilder();
             var selector = builder.AddTemplate(sql);
 
-
+            //Where está sendo feito aqui
             builder.Where("orcamento.NumOrcamento = @NumOrcamento", new { query.NumOrcamento });
+            builder.Where("orcamento.CdEmpresa = @CdEmpresa", new { query.CdEmpresa });
+            builder.Where("orcamento.CdFilial = @CdFilial", new { query.CdFilial });
+
             var cmd = new CommandDefinition(selector.RawSql, selector.Parameters, flags: CommandFlags.NoCache);
             return _dataAccess.Connection.QueryFirstOrDefault<OrcamentoViewModel>(cmd);
         }
 
-
-       //public async Task<OrcamentoViewModel> Handle(ObterOcamentoQuery request, CancellationToken cancellationToken)
-       //{
-       //    var cdEmpresa = "";
-       //    var cdFilial = "";
-       //    var orcamento = _orcamentoRepository.ObterOrcamento(cdEmpresa, cdFilial, request.NumOrcamento);
-       //    return new OrcamentoViewModel()
-       //    {
-       //        NumOrcamento = orcamento.NumOrcamento,
-       //        DtOrcamento = orcamento.DtOrcamento,
-       //        DataValidade = orcamento.Validade.Data,
-       //        DiasValidade = orcamento.Validade.Dias
-       //    };
-       //}
+        //public async Task<OrcamentoViewModel> Handle(ObterOcamentoQuery request, CancellationToken cancellationToken)
+        //{
+        //    var cdEmpresa = "";
+        //    var cdFilial = "";
+        //    var orcamento = _orcamentoRepository.ObterOrcamento(cdEmpresa, cdFilial, request.NumOrcamento);
+        //    return new OrcamentoViewModel()
+        //    {
+        //        NumOrcamento = orcamento.NumOrcamento,
+        //        DtOrcamento = orcamento.DtOrcamento,
+        //        DataValidade = orcamento.Validade.Data,
+        //        DiasValidade = orcamento.Validade.Dias
+        //    };
+        //}
 
     }
 
